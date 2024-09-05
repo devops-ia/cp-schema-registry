@@ -52,7 +52,7 @@ jobs:
           echo "aws_msk_iam_auth_latest_release=$aws_msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
 
           # complete release
-          echo "complete_release=$cp_schema_registry_latest_release" >> $GITHUB_OUTPUT
+          echo "complete_release=${cp_schema_registry_latest_release}-msk-iam-auth${aws_msk_iam_auth_latest_release}" >> $GITHUB_OUTPUT
 
       - name: Check if exists changes
         id: check_changes

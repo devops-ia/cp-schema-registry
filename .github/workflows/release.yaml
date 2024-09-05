@@ -39,11 +39,11 @@ jobs:
           echo "cp_schema_registry_current_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
 
           # aws_msk_iam_auth_release
-          aws_msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          aws_msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
           echo "aws_msk_iam_auth_current_release=$aws_msk_iam_auth_current_release" >> $GITHUB_OUTPUT
 
           # complete release
-          echo "complete_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
+          echo "complete_release=${cp_schema_registry_current_release}-msk-iam-auth${aws_msk_iam_auth_current_release}" >> $GITHUB_OUTPUT
 
       - name: "Set Docker metadata"
         id: meta
