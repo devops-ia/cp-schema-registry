@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Image base with `cp-schema-registry` and `aws-msk-iam-auth` li brary for [cp-schema-registry](https://github.com/devops-ia/helm-charts/tree/main/charts/cp-schema-registry) to allow [MSK IAM auth](https://github.com/aws/aws-msk-iam-auth) for [Amazon MSK](https://aws.amazon.com/en/msk/).
+Image base with `cp-schema-registry` and `aws-msk-iam-auth` library for [helm-cp-schema-registry](https://github.com/devops-ia/helm-charts/tree/main/charts/cp-schema-registry) to allow [MSK IAM auth](https://github.com/aws/aws-msk-iam-auth) for [Amazon MSK](https://aws.amazon.com/en/msk/).
 
 Default base versions:
 
@@ -14,9 +14,9 @@ Default base versions:
 ```text
 │ Image Details ├─────────────
 
-Total Image size: 302 MB
-Potential wasted space: 0 MB
-Image efficiency score: 100 %
+Total Image size: 2.0 GB
+Potential wasted space: 66 MB
+Image efficiency score: 97 %
 ```
 
 You can reproduce this summary with [`dive`](https://github.com/wagoodman/dive):
@@ -32,7 +32,7 @@ dive build -t <tag-name> .
 ### Run container
 
 ```command
-docker run --name <container-name> cp-schema-registry7.4.0-msk-iam-auth2.2.0
+docker run --name <container-name> 7.4.0
 ```
 
 ## Use case

@@ -27,9 +27,9 @@ jobs:
           cp_schema_registry_current_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
           echo "cp_schema_registry_current_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
 
-          # msk_iam_auth_release
-          msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
-          echo "msk_iam_auth_current_release=$msk_iam_auth_current_release" >> $GITHUB_OUTPUT
+          # aws_msk_iam_auth_release
+          aws_msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "aws_msk_iam_auth_current_release=$aws_msk_iam_auth_current_release" >> $GITHUB_OUTPUT
 
       - name: Install updatecli
         uses: updatecli/updatecli-action@v2
@@ -47,20 +47,20 @@ jobs:
           cp_schema_registry_latest_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
           echo "cp_schema_registry_latest_release=$cp_schema_registry_latest_release" >> $GITHUB_OUTPUT
 
-          # msk_iam_auth_release
-          msk_iam_auth_latest_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
-          echo "msk_iam_auth_latest_release=$msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
+          # aws_msk_iam_auth_release
+          aws_msk_iam_auth_latest_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "aws_msk_iam_auth_latest_release=$aws_msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
 
-          # complete_tag
-          echo "complete_release=cp-schema-registry$cp_schema_registry_latest_release-msk-iam-auth$msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
+          # complete release
+          echo "complete_release=$cp_schema_registry_latest_release" >> $GITHUB_OUTPUT
 
       - name: Check if exists changes
         id: check_changes
         env:
           cp_schema_registry_current_release: ${{ steps.current_release.outputs.cp_schema_registry_current_release }}
           cp_schema_registry_latest_release: ${{ steps.latest_release.outputs.cp_schema_registry_latest_release }}
-          msk_iam_auth_current_release: ${{ steps.current_release.outputs.msk_iam_auth_current_release }}
-          msk_iam_auth_latest_release: ${{ steps.latest_release.outputs.msk_iam_auth_latest_release }}
+          aws_msk_iam_auth_current_release: ${{ steps.current_release.outputs.aws_msk_iam_auth_current_release }}
+          aws_msk_iam_auth_latest_release: ${{ steps.latest_release.outputs.aws_msk_iam_auth_latest_release }}
         run: |
           # cp_schema_registry
           if [ "$cp_schema_registry_current_release" != "$cp_schema_registry_latest_release" ]; then
@@ -71,12 +71,12 @@ jobs:
               echo "release_changed=true" >> $GITHUB_OUTPUT
           fi
 
-          # msk_iam_auth
-          if [ "$msk_iam_auth_current_release" != "$msk_iam_auth_latest_release" ]; then
+          # aws_msk_iam_auth
+          if [ "$aws_msk_iam_auth_current_release" != "$aws_msk_iam_auth_latest_release" ]; then
               body+="AWS IAM Auth version:\n"
-              body+="  - :information_source: Current: \`$msk_iam_auth_current_release\`\n"
-              body+="  - :up: Upgrade: \`$msk_iam_auth_latest_release\`\n"
-              body+="  - Changelog: https://github.com/aws/aws-msk-iam-auth/releases/tag/v$msk_iam_auth_latest_release\n\n"
+              body+="  - :information_source: Current: \`$aws_msk_iam_auth_current_release\`\n"
+              body+="  - :up: Upgrade: \`$aws_msk_iam_auth_latest_release\`\n"
+              body+="  - Changelog: https://github.com/aws/aws-msk-iam-auth/releases/tag/v$aws_msk_iam_auth_latest_release\n\n"
 
               echo "release_changed=true" >> $GITHUB_OUTPUT
           fi
