@@ -1,0 +1,98 @@
+name: Check cp-schema-registry new release
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  check-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Get current tag
+        id: current_release
+        run: |
+          # cp_schema_registry_release
+          cp_schema_registry_current_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "cp_schema_registry_current_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
+
+          # msk_iam_auth_release
+          msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "msk_iam_auth_current_release=$msk_iam_auth_current_release" >> $GITHUB_OUTPUT
+
+      - name: Install updatecli
+        uses: updatecli/updatecli-action@v2
+
+      - name: Update dependencies
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_GITHUB }}
+        run: |
+          updatecli apply --config .github/updatecli/dependencies.yaml --commit=false
+
+      - name: Get latest tag
+        id: latest_release
+        run: |
+          # cp_schema_registry_release
+          cp_schema_registry_latest_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "cp_schema_registry_latest_release=$cp_schema_registry_latest_release" >> $GITHUB_OUTPUT
+
+          # msk_iam_auth_release
+          msk_iam_auth_latest_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "msk_iam_auth_latest_release=$msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
+
+          # complete_tag
+          echo "complete_release=cp-schema-registry$cp_schema_registry_latest_release-msk-iam-auth$msk_iam_auth_latest_release" >> $GITHUB_OUTPUT
+
+      - name: Check if exists changes
+        id: check_changes
+        env:
+          cp_schema_registry_current_release: ${{ steps.current_release.outputs.cp_schema_registry_current_release }}
+          cp_schema_registry_latest_release: ${{ steps.latest_release.outputs.cp_schema_registry_latest_release }}
+          msk_iam_auth_current_release: ${{ steps.current_release.outputs.msk_iam_auth_current_release }}
+          msk_iam_auth_latest_release: ${{ steps.latest_release.outputs.msk_iam_auth_latest_release }}
+        run: |
+          # cp_schema_registry
+          if [ "$cp_schema_registry_current_release" != "$cp_schema_registry_latest_release" ]; then
+              body+="AWS CLI version:\n"
+              body+="  - :information_source: Current: \`$cp_schema_registry_current_release\`\n"
+              body+="  - :up: Upgrade: \`$cp_schema_registry_latest_release\`\n\n"
+
+              echo "release_changed=true" >> $GITHUB_OUTPUT
+          fi
+
+          # msk_iam_auth
+          if [ "$msk_iam_auth_current_release" != "$msk_iam_auth_latest_release" ]; then
+              body+="AWS IAM Auth version:\n"
+              body+="  - :information_source: Current: \`$msk_iam_auth_current_release\`\n"
+              body+="  - :up: Upgrade: \`$msk_iam_auth_latest_release\`\n"
+              body+="  - Changelog: https://github.com/aws/aws-msk-iam-auth/releases/tag/v$msk_iam_auth_latest_release\n\n"
+
+              echo "release_changed=true" >> $GITHUB_OUTPUT
+          fi
+
+          echo -e "$body" > pr-output.log
+
+      - name: Create PR changes
+        if: steps.check_changes.outputs.release_changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.PAT_GITHUB }}
+          commit-message: "feat: new cp-schema-registry version ${{ steps.latest_release.outputs.complete_release }}"
+          signoff: false
+          branch: feat/upgrade-cp-schema-registry-${{ steps.latest_release.outputs.complete_release }}
+          delete-branch: true
+          title: '[cp-schema-registry] new release: ${{ steps.latest_release.outputs.complete_release }}'
+          body-path: pr-output.log
+          labels: |
+            auto-pr-bump-version

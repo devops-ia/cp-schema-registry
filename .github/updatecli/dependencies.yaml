@@ -1,0 +1,38 @@
+sources:
+  cp-schema-registry:
+    kind: dockerimage
+    spec:
+      image: confluentinc/cp-schema-registry
+      architecture: linux/amd64
+      versionFilter:
+        kind: semver
+  aws-msk-iam-auth:
+    kind: githubrelease
+    spec:
+      owner: "aws"
+      repository: "aws-msk-iam-auth"
+      token: {{ requiredEnv "GITHUB_TOKEN" }}
+      versionFilter:
+        kind: semver
+    transformers:
+      - trimprefix: "v"
+conditions: {}
+targets:
+  update-cp-schema-registry-version:
+    name: "Update the value of ARG CP_SCHEMA_REGISTRY_VERSION in the Dockerfile"
+    sourceid: cp-schema-registry
+    kind: dockerfile
+    spec:
+      file: Dockerfile
+      instruction:
+        keyword: "ARG"
+        matcher: "CP_SCHEMA_REGISTRY_VERSION"
+  update-aws-msk-iam-auth-version:
+    name: "Update the value of ARG AWS_MSK_IAM_AUTH_VERSION in the Dockerfile"
+    sourceid: aws-msk-iam-auth
+    kind: dockerfile
+    spec:
+      file: Dockerfile
+      instruction:
+        keyword: "ARG"
+        matcher: "AWS_MSK_IAM_AUTH_VERSION"
