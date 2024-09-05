@@ -34,12 +34,12 @@ jobs:
       - name: Read tags from Dockerfile
         id: current_release
         run: |
-          # cp_schema_registry_tag
-          cp_schema_registry_current_release=$(grep "ARG AWSCLI_VERSION" Dockerfile | cut -d '=' -f 2)
+          # cp_schema_registry_release
+          cp_schema_registry_current_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
           echo "cp_schema_registry_current_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
 
-          # aws_msk_iam_auth_tag
-          aws_msk_iam_auth_current_release=$(grep "ARG KUBECTL_VERSION" Dockerfile | cut -d '=' -f 2)
+          # aws_msk_iam_auth_release
+          aws_msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
           echo "aws_msk_iam_auth_current_release=$aws_msk_iam_auth_current_release" >> $GITHUB_OUTPUT
 
           # complete release
