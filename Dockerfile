@@ -1,8 +1,8 @@
-ARG CP_SCHEMA_REGISTRY_VERSION=7.9.0
+ARG CP_SCHEMA_REGISTRY_VERSION=8.0.0
 
 FROM confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_VERSION}
 
-ARG AWS_MSK_IAM_AUTH_VERSION=2.2.0
+ARG AWS_MSK_IAM_AUTH_VERSION=2.3.3
 
 LABEL maintainer="Iván Alejandro Marugán <hello@ialejandro.rocks>"                         \
       description="Add MSK IAM auth library (https://github.com/aws/aws-msk-iam-auth)"
