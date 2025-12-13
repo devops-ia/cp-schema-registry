@@ -1,4 +1,4 @@
-name: Create cp-schema-registry release
+name: Create release
 
 env:
   DOCKERHUB_USER: devopsiaci
@@ -32,20 +32,20 @@ jobs:
           fetch-depth: 0
 
       - name: Read tags from Dockerfile
-        id: current_release
+        id: current_tag
         run: |
           # cp_schema_registry_release
-          cp_schema_registry_current_release=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
-          echo "cp_schema_registry_current_release=$cp_schema_registry_current_release" >> $GITHUB_OUTPUT
+          cp_schema_registry_current_tag=$(grep "ARG CP_SCHEMA_REGISTRY_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "cp_schema_registry_current_tag=$cp_schema_registry_current_tag" >> $GITHUB_OUTPUT
 
           # aws_msk_iam_auth_release
-          aws_msk_iam_auth_current_release=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
-          echo "aws_msk_iam_auth_current_release=$aws_msk_iam_auth_current_release" >> $GITHUB_OUTPUT
+          aws_msk_iam_auth_current_tag=$(grep "ARG AWS_MSK_IAM_AUTH_VERSION" Dockerfile | cut -d '=' -f 2)
+          echo "aws_msk_iam_auth_current_tag=$aws_msk_iam_auth_current_tag" >> $GITHUB_OUTPUT
 
           # complete release
-          echo "complete_release=${cp_schema_registry_current_release}-msk-iam-auth${aws_msk_iam_auth_current_release}" >> $GITHUB_OUTPUT
+          echo "complete_release=${cp_schema_registry_current_tag}-msk-iam-auth${aws_msk_iam_auth_current_tag}" >> $GITHUB_OUTPUT
 
-      - name: "Set Docker metadata"
+      - name: Set Docker metadata
         id: meta
         uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
         with:
@@ -58,7 +58,7 @@ jobs:
             org.opencontainers.image.description=cp-schema-registry with MSK IAM auth library to authenticate with AWS MSK
             org.opencontainers.image.vendor=DevOps IA
           tags: |
-            type=raw,value=${{ steps.current_release.outputs.complete_release }}
+            type=raw,value=${{ steps.current_tag.outputs.complete_release }}
             type=sha,enable=false
 
       - name: Set up QEMU
@@ -104,8 +104,8 @@ jobs:
       - name: "Update README.md default version"
         run: |
           # replace default version
-          sed -i "s/\* cp-schema-registry: .*/* cp-schema-registry: \`${{ steps.current_release.outputs.cp_schema_registry_current_release }}\`/" README.md
-          sed -i "s/\* aws-msk-iam-auth: .*/* aws-msk-iam-auth: \`${{ steps.current_release.outputs.aws_msk_iam_auth_current_release }}\`/" README.md
+          sed -i "s/\* cp-schema-registry: .*/* cp-schema-registry: \`${{ steps.current_tag.outputs.cp_schema_registry_current_tag }}\`/" README.md
+          sed -i "s/\* aws-msk-iam-auth: .*/* aws-msk-iam-auth: \`${{ steps.current_tag.outputs.aws_msk_iam_auth_current_tag }}\`/" README.md
 
           # push changes
           git config --global user.email "github-actions[bot]@users.noreply.github.com"

@@ -14,9 +14,9 @@ Default base versions:
 ```text
 │ Image Details ├─────────────
 
-Total Image size: 2.0 GB
-Potential wasted space: 66 MB
-Image efficiency score: 97 %
+Total Image size: 796 MB
+Potential wasted space: 80 MB
+Image efficiency score: 91 %
 ```
 
 You can reproduce this summary with [`dive`](https://github.com/wagoodman/dive):
