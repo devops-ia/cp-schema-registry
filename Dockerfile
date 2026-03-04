@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-ARG CP_SCHEMA_REGISTRY_VERSION=8.1.1
+ARG CP_SCHEMA_REGISTRY_VERSION=8.2.0
 
 FROM confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_VERSION}
 
