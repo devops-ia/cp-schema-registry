@@ -1,10 +1,10 @@
 # syntax=docker/dockerfile:1
 
-ARG CP_SCHEMA_REGISTRY_VERSION=8.2.0
+ARG CP_SCHEMA_REGISTRY_VERSION=8.2.1
 
 FROM confluentinc/cp-schema-registry:${CP_SCHEMA_REGISTRY_VERSION}
 
-ARG AWS_MSK_IAM_AUTH_VERSION=2.3.5
+ARG AWS_MSK_IAM_AUTH_VERSION=2.3.6
 
 LABEL org.opencontainers.image.authors="Iván Alejandro Marugán <projects@ialejandro.rocks>" \
       org.opencontainers.image.title="Confluent Schema Registry with AWS MSK IAM Auth" \
