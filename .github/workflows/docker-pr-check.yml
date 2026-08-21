@@ -1,0 +1,30 @@
+name: Docker PR Check
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dive-check:
+    name: Dive image efficiency check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Build image
+        run: docker build -t cp-schema-registry:pr-check .
+
+      - name: Run dive
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$PWD":/repo \
+            -w /repo \
+            wagoodman/dive:v0.13.1 \
+            cp-schema-registry:pr-check --ci --ci-config .dive-ci
