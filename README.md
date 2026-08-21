@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Image base with `cp-schema-registry` and `aws-msk-iam-auth` library for [helm-cp-schema-registry](https://github.com/devops-ia/helm-charts/tree/main/charts/cp-schema-registry) to allow [MSK IAM auth](https://github.com/aws/aws-msk-iam-auth) for [Amazon MSK](https://aws.amazon.com/en/msk/).
+Image base with `cp-schema-registry` and `aws-msk-iam-auth` library for [helm-cp-schema-registry](https://github.com/devops-ia/helm-cp-schema-registry) to allow [MSK IAM auth](https://github.com/aws/aws-msk-iam-auth) for [Amazon MSK](https://aws.amazon.com/en/msk/).
 
 Default base versions:
 
@@ -37,4 +37,4 @@ docker run --name <container-name> 7.4.0
 
 ## Use case
 
-This image is used by [helm-cp-schema-registry](https://github.com/devops-ia/helm-charts/tree/main/charts/cp-schema-registry)
+This image is used by [helm-cp-schema-registry](https://github.com/devops-ia/helm-cp-schema-registry)

@@ -16,7 +16,16 @@ sources:
         kind: semver
     transformers:
       - trimprefix: "v"
-conditions: {}
+conditions:
+  cp-schema-registry-multiarch:
+    name: "linux/amd64 and linux/arm64"
+    sourceid: cp-schema-registry
+    kind: dockerimage
+    spec:
+      image: confluentinc/cp-schema-registry
+      architectures:
+        - linux/amd64
+        - linux/arm64
 targets:
   update-cp-schema-registry-version:
     name: "Update the value of ARG CP_SCHEMA_REGISTRY_VERSION in the Dockerfile"
