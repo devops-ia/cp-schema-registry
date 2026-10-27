@@ -6,8 +6,8 @@ Image base with `cp-schema-registry` and `aws-msk-iam-auth` library for [helm-cp
 
 Default base versions:
 
-* cp-schema-registry: `8.3.2`
-* aws-msk-iam-auth: `2.3.8`
+* cp-schema-registry: `8.4.0`
+* aws-msk-iam-auth: `2.3.9`
 
 ## Image details (from dive)
 
